@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+  <!-- 👇Declarative Shadow DOMを使用したWeb ComponentはJSを無効でも動く👇 -->
+    <declarative-shadow-host-custom-element>      
+      <template shadowrootmode="open">
+      <style>
+        h1 {
+          color: red;
+        }
+      </style>
+      <h1>🙈 This is Declarative Shadow DOM 🙈</h1>
+    </template>
+  </declarative-shadow-host-custom-element>
+
+  <div id="innerHTML-container"></div>
+  <div id="domParser-container"></div>
+  <div id="setHTMLUnsafe-container"></div>
+  <div id="parseHTMLUnsafe-container"></div>
+
+  </body>
+  <script>
+    const serverHTML = `
+          <declarative-shadow-host-custom-element>      
+            <template shadowrootmode="open">
+            <style>
+              h1 {
+                color: red;
+              }
+            </style>
+            <h1>🙈 This is Declarative Shadow DOM 🙈</h1>
+          </template>
+        </declarative-shadow-host-custom-element>
+    `;
+
+    // const innerHTMLContainer = document.getElementById('innerHTML-container');
+    // innerHTMLContainer.innerHTML = serverHTML;
+    
+    // const domParserContainer = document.getElementById('domParser-container');
+    // const parser = new DOMParser();
+    // const doc = parser.parseFromString(serverHTML, 'text/html');
+    // const domParserFragment = document.createDocumentFragment();
+    // domParserFragment.appendChild(doc.body.firstChild);
+    // domParserContainer.appendChild(fragment);
+
+
+    const setHTMLUnsafeContainer = document.getElementById('setHTMLUnsafe-container');
+    setHTMLUnsafeContainer.setHTMLUnsafe = serverHTML;
+
+    const parseHTMLUnsafeContainer = document.getElementById('parseHTMLUnsafe-container');
+    const fragment = parseHTMLUnsafe(serverHTML);
+    parseHTMLUnsafeContainer.appendChild(fragment);
+  </script>
+</html>
