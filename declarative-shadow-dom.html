@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+  <!-- 👇Declarative Shadow DOMを使用したWeb ComponentはJSを無効でも動く👇 -->
+    <declarative-shadow-host-custom-element>      
+      <template shadowrootmode="open">
+      <style>
+        h1 {
+          color: gray;
+        }
+      </style>
+      <h1>🙈 This is Declarative Shadow DOM 🙈</h1>
+    </template>
+  </declarative-shadow-host-custom-element>
+
+  <!-- 👇JSで定義するShadow DOMを使用したWeb ComponentはJSを無効では動かない👇 -->
+  <shadow-host-custom-element></shadow-host-custom-element>
+  
+  </body>
+  <script>
+    class ShadowHostCustomElement extends HTMLElement {
+      connectedCallback () {
+        this.attachShadow({ mode: "open" });
+        this.shadowRoot.innerHTML = `
+          <style>
+            h1 {
+              color: blue;
+            }
+          </style>
+          <h1>🙈 This is Shadow DOM from JS🙈</h1>
+        `;
+      }
+    }
+
+    // Custom Elementを定義
+    window.customElements.define("shadow-host-custom-element", ShadowHostCustomElement)
+  </script>
+</html>
