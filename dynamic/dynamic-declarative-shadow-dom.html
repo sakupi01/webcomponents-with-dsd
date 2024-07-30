@@ -6,54 +6,102 @@
     <title>Document</title>
 </head>
 <body>
-  <!-- 👇Declarative Shadow DOMを使用したWeb ComponentはJSを無効でも動く👇 -->
-    <declarative-shadow-host-custom-element>      
-      <template shadowrootmode="open">
-      <style>
-        h1 {
-          color: red;
-        }
-      </style>
-      <h1>🙈 This is Declarative Shadow DOM 🙈</h1>
-    </template>
-  </declarative-shadow-host-custom-element>
 
-  <div id="innerHTML-container"></div>
-  <div id="domParser-container"></div>
-  <div id="setHTMLUnsafe-container"></div>
-  <div id="parseHTMLUnsafe-container"></div>
+  <div id="container" style="margin: 3%; padding: 3%; border: 3px solid black;">
+    <p style="font-size: larger;">HTMLに直にマークアップしたDSD</p>
+    <h2>↓↓↓DSD will appear under here↓↓↓</h2>
+    <div id="dsd-container">
+      <declarative-shadow-host-custom-element>      
+        <template shadowrootmode="open">
+          <style>
+            h1 {
+              color: gray;
+            }
+          </style>
+          <h1>🙈 This is Declarative Shadow DOM 🙈</h1>
+        </template>
+      </declarative-shadow-host-custom-element>
+    </div>
+  </div>
+
+  <div style="margin: 3%; padding: 3%; border: 3px solid black;">
+    <p style="font-size: larger;">innerHTMLを使って挿入</p>
+    <h2>↓↓↓DSD will appear under here↓↓↓</h2>
+    <div id="innerHTML-dsd"></div>
+  </div>
+  
+  <div style="margin: 3%; padding: 3%; border: 3px solid black;">
+    <p style="font-size: larger;">setHTMLUnsafeを使って挿入</p>
+    <h2>↓↓↓DSD will appear under here↓↓↓</h2>
+    <div id="setHTMLUnsafe-dsd"></div>
+  </div>
 
   </body>
   <script>
-    const serverHTML = `
-          <declarative-shadow-host-custom-element>      
-            <template shadowrootmode="open">
-            <style>
-              h1 {
-                color: red;
-              }
-            </style>
-            <h1>🙈 This is Declarative Shadow DOM 🙈</h1>
-          </template>
-        </declarative-shadow-host-custom-element>
-    `;
+  const innerHTMLText = `
+        <declarative-shadow-host-custom-element>      
+          <template shadowrootmode="open">
+          <style>
+            h1 {
+              color: red;
+            }
+          </style>
+          <h1>🙈 This is Declarative Shadow DOM with innerHTML 🙈</h1>
+        </template>
+      </declarative-shadow-host-custom-element>
+  `;
+  const setHTMLUnsafeText = `
+        <declarative-shadow-host-custom-element>      
+          <template shadowrootmode="open">
+          <style>
+            h1 {
+              color: green;
+            }
+          </style>
+          <h1>🙈 This is Declarative Shadow DOM with setHTMLUnsafe 🙈</h1>
+        </template>
+      </declarative-shadow-host-custom-element>
+  `;
+  const parseFromStringText = `
+        <declarative-shadow-host-custom-element>      
+          <template shadowrootmode="open">
+          <style>
+            h1 {
+              color: red;
+            }
+          </style>
+          <h1>🙈 This is Declarative Shadow DOM with parseFromString 🙈</h1>
+        </template>
+      </declarative-shadow-host-custom-element>
+  `;
+  const parseHTMLUnsafeText = `
+        <declarative-shadow-host-custom-element>      
+          <template shadowrootmode="open">
+          <style>
+            h1 {
+              color: green;
+            }
+          </style>
+          <h1>🙈 This is Declarative Shadow DOM with parseHTMLUnsafe 🙈</h1>
+        </template>
+      </declarative-shadow-host-custom-element>
+  `;
 
-    // const innerHTMLContainer = document.getElementById('innerHTML-container');
-    // innerHTMLContainer.innerHTML = serverHTML;
+    // ❌ innerHTML
+    const innerHTMLContainer = document.getElementById('innerHTML-dsd');
+    innerHTMLContainer.innerHTML = innerHTMLText;
     
-    // const domParserContainer = document.getElementById('domParser-container');
-    // const parser = new DOMParser();
-    // const doc = parser.parseFromString(serverHTML, 'text/html');
-    // const domParserFragment = document.createDocumentFragment();
-    // domParserFragment.appendChild(doc.body.firstChild);
-    // domParserContainer.appendChild(fragment);
+    // 🟢 setHTMLUnsafe
+    const setHTMLUnsafeContainer = document.getElementById('setHTMLUnsafe-dsd');
+    setHTMLUnsafeContainer.setHTMLUnsafe(setHTMLUnsafeText);
 
+    // ❌ DOMParser's parseFromString
+    const parser = new DOMParser();
+    const domParserDoc = parser.parseFromString(parseFromStringText, 'text/html');
+    console.log(domParserDoc);
 
-    const setHTMLUnsafeContainer = document.getElementById('setHTMLUnsafe-container');
-    setHTMLUnsafeContainer.setHTMLUnsafe = serverHTML;
-
-    const parseHTMLUnsafeContainer = document.getElementById('parseHTMLUnsafe-container');
-    const fragment = parseHTMLUnsafe(serverHTML);
-    parseHTMLUnsafeContainer.appendChild(fragment);
+    // 🟢 Document.parseHTMLUnsafe
+    const parseHTMLUnsafeDoc = Document.parseHTMLUnsafe(parseHTMLUnsafeText);
+    console.log(parseHTMLUnsafeDoc);
   </script>
 </html>
