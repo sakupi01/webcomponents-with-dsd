@@ -1,43 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-</head>
-<body>
-  <!-- 👇Declarative Shadow DOMを使用したWeb ComponentはJSを無効でも動く👇 -->
-    <declarative-shadow-host-custom-element>      
+  </head>
+  <body>
+    <!-- 👇Declarative Shadow DOMを使用したWeb ComponentはJSを無効でも動く👇 -->
+    <declarative-shadow-host-custom-element>
       <template shadowrootmode="open">
-      <style>
-        h1 {
-          color: gray;
-        }
-      </style>
-      <h1>🙈 This is Declarative Shadow DOM 🙈</h1>
-    </template>
-  </declarative-shadow-host-custom-element>
+        <style>
+          h1 {
+            color: gray;
+          }
+        </style>
+        <h1><slot></slot></h1>
+      </template>
+      🙈 This is Declarative Shadow DOM 🙈
+    </declarative-shadow-host-custom-element>
 
-  <!-- 👇JSで定義するShadow DOMを使用したWeb ComponentはJSを無効では動かない👇 -->
-  <shadow-host-custom-element></shadow-host-custom-element>
-  
+    <!-- 👇JSで定義するShadow DOMを使用したWeb ComponentはJSを無効では動かない👇 -->
+    <shadow-host-custom-element></shadow-host-custom-element>
+
+    <declarative-hello-world>
+      <template shadowrootmode="open">
+        <style>
+          button {
+            background-color: pink;
+            color: white;
+            padding: 15px 32px;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+          }
+        </style>
+        <button><slot></slot></button>
+      </template>
+      🙈 This is Declarative Shadow DOM 🙈
+    </declarative-hello-world>
   </body>
   <script>
     class ShadowHostCustomElement extends HTMLElement {
-      connectedCallback () {
-        this.attachShadow({ mode: "open" });
-        this.shadowRoot.innerHTML = `
+      connectedCallback() {
+        const shadowRoot = this.attachShadow({ mode: "open" });
+        shadowRoot.innerHTML = `
           <style>
             h1 {
-              color: blue;
+              color: gray;
             }
           </style>
-          <h1>🙈 This is Shadow DOM from JS🙈</h1>
+          <h1>🙈 This is Shadow DOM 🙈</h1>
         `;
       }
     }
+    window.customElements.define("shadow-host-custom-element", ShadowHostCustomElement);
 
-    // Custom Elementを定義
-    window.customElements.define("shadow-host-custom-element", ShadowHostCustomElement)
+    class DeclarativeHelloWorld extends HTMLElement {
+      connectedCallback() {
+        const content = this.getAttribute("content") || "World";
+        const button = this.shadowRoot.querySelector("button");
+        button.addEventListener("click", () => {
+          alert(`Hello, ${content}!`);
+        });
+      }
+    }
+
+    window.customElements.define("declarative-hello-world", DeclarativeHelloWorld);
   </script>
 </html>

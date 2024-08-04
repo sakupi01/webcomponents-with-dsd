@@ -1,44 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-</head>
-<body>
-
-  <div id="container" style="margin: 3%; padding: 3%; border: 3px solid black;">
-    <p style="font-size: larger;">HTMLに直にマークアップしたDSD</p>
-    <h2>↓↓↓DSD will appear under here↓↓↓</h2>
-    <div id="dsd-container">
-      <declarative-shadow-host-custom-element>      
-        <template shadowrootmode="open">
-          <style>
-            h1 {
-              color: gray;
-            }
-          </style>
-          <h1>🙈 This is Declarative Shadow DOM 🙈</h1>
-        </template>
-      </declarative-shadow-host-custom-element>
+  </head>
+  <body>
+    <div id="container" style="margin: 3%; padding: 3%; border: 3px solid black;">
+      <p style="font-size: larger;">HTMLに直にマークアップしたDSD</p>
+      <h2>↓↓↓DSD will appear under here↓↓↓</h2>
+      <div id="dsd-container">
+        <declarative-shadow-host-custom-element>
+          <template shadowrootmode="open">
+            <style>
+              h1 {
+                color: gray;
+              }
+            </style>
+            <h1>🙈 This is Declarative Shadow DOM 🙈</h1>
+          </template>
+        </declarative-shadow-host-custom-element>
+      </div>
     </div>
-  </div>
 
-  <div style="margin: 3%; padding: 3%; border: 3px solid black;">
-    <p style="font-size: larger;">innerHTMLを使って挿入</p>
-    <h2>↓↓↓DSD will appear under here↓↓↓</h2>
-    <div id="innerHTML-dsd"></div>
-  </div>
-  
-  <div style="margin: 3%; padding: 3%; border: 3px solid black;">
-    <p style="font-size: larger;">setHTMLUnsafeを使って挿入</p>
-    <h2>↓↓↓DSD will appear under here↓↓↓</h2>
-    <div id="setHTMLUnsafe-dsd"></div>
-  </div>
+    <div style="margin: 3%; padding: 3%; border: 3px solid black;">
+      <p style="font-size: larger;">innerHTMLを使って挿入</p>
+      <h2>↓↓↓DSD will appear under here↓↓↓</h2>
+      <div id="innerHTML-dsd"></div>
+    </div>
 
+    <div style="margin: 3%; padding: 3%; border: 3px solid black;">
+      <p style="font-size: larger;">setHTMLUnsafeを使って挿入</p>
+      <h2>↓↓↓DSD will appear under here↓↓↓</h2>
+      <div id="setHTMLUnsafe-dsd"></div>
+    </div>
   </body>
   <script>
-  const innerHTMLText = `
+    class DeclarativeShadowHostCustomElement extends HTMLElement {
+      connectedCallback() {
+        console.log("Shadow Root: ", this.shadowRoot);
+      }
+    }
+    customElements.define("declarative-shadow-host-custom-element", DeclarativeShadowHostCustomElement);
+
+    const innerHTMLText = `
         <declarative-shadow-host-custom-element>      
           <template shadowrootmode="open">
           <style>
@@ -50,7 +55,7 @@
         </template>
       </declarative-shadow-host-custom-element>
   `;
-  const setHTMLUnsafeText = `
+    const setHTMLUnsafeText = `
         <declarative-shadow-host-custom-element>      
           <template shadowrootmode="open">
           <style>
@@ -62,7 +67,7 @@
         </template>
       </declarative-shadow-host-custom-element>
   `;
-  const parseFromStringText = `
+    const parseFromStringText = `
         <declarative-shadow-host-custom-element>      
           <template shadowrootmode="open">
           <style>
@@ -74,7 +79,7 @@
         </template>
       </declarative-shadow-host-custom-element>
   `;
-  const parseHTMLUnsafeText = `
+    const parseHTMLUnsafeText = `
         <declarative-shadow-host-custom-element>      
           <template shadowrootmode="open">
           <style>
@@ -88,16 +93,16 @@
   `;
 
     // ❌ innerHTML
-    const innerHTMLContainer = document.getElementById('innerHTML-dsd');
+    const innerHTMLContainer = document.getElementById("innerHTML-dsd");
     innerHTMLContainer.innerHTML = innerHTMLText;
-    
+
     // 🟢 setHTMLUnsafe
-    const setHTMLUnsafeContainer = document.getElementById('setHTMLUnsafe-dsd');
+    const setHTMLUnsafeContainer = document.getElementById("setHTMLUnsafe-dsd");
     setHTMLUnsafeContainer.setHTMLUnsafe(setHTMLUnsafeText);
 
     // ❌ DOMParser's parseFromString
     const parser = new DOMParser();
-    const domParserDoc = parser.parseFromString(parseFromStringText, 'text/html');
+    const domParserDoc = parser.parseFromString(parseFromStringText, "text/html");
     console.log(domParserDoc);
 
     // 🟢 Document.parseHTMLUnsafe
